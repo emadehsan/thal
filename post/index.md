@@ -160,7 +160,7 @@ await page.goto(searchUrl);
 await page.waitFor(2*1000);
 ```
 
-### Extract and Save Emails 
+### Extract Emails 
 We are interested in extracting `username` and `email` of users. Lets copy the DOM element selectors like we did above.
 
 ```js
@@ -269,6 +269,26 @@ for (let h = 1; h <= numPages; h++) {
 	}
 	// TODO save users
 }
+```
+
+### Save to MongoDB
+The part with `puppeteer` is over now. We will use `mongoose` to store the information in to `MongoDB`. Its a ORM (Objec Relational Model FIXME insert wiki link) to store information into the database.
+
+Create a directory `models`. Create a file `user.js` inside and put the following code in it.
+
+```js
+
+let mongoose = require('mongoose');
+
+let userSchema = new mongoose.Schema({
+    username: String,
+    email: String,
+    dateCrawled: Date
+});
+
+let User = mongoose.model('User', userSchema);
+
+module.exports = User;
 ```
 
 ## To the Cloud
