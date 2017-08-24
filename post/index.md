@@ -88,7 +88,7 @@ Add another file `.gitignore` and put following content inside it:
 node_modules/
 creds.js
 ```
-#### Laucnh in non headless
+#### Launch in non headless
 For visual debugging, make chrome launch with GUI by passing an object with `headless: false` to `launch` method.
 ```js
 const browser = await puppeteer.launch({
@@ -101,7 +101,12 @@ Lets navigate to login
 await page.goto('https://github.com/login');
 ```
 
-Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address**. From developers tool, right click on the highlighted code and select `Copy` then `Copy selector`. Paste that value to following constant
+Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address**. From developers tool, right click on the highlighted code and 
+select `Copy` then `Copy selector`. 
+
+![Copy dom element selector](./media/copy-selector.png)
+
+Paste that value to following constant
 
 ```js
 const USERNAME_SELECTOR = '#login_field'; // "#login_field" is the copied value
@@ -134,8 +139,26 @@ await page.click(BUTTON_SELECTOR);
 await page.waitForNavigation();
 ```
 
-
 ### Search GitHub
+Now, we have logged in. We can programmatically click on search box, fill it and on the results page, click users tab. But there's an easy way. Search requests are usually GET requests. So, every thing is sent via url. So, manually type `john` inside search box and then click users tab and copy the url. It would be
+
+```js
+let searchUrl = 'https://github.com/search?q=john&type=Users&utf8=%E2%9C%93';
+```
+
+Rearranging a bit
+
+```js
+let userToSearch = 'john';
+let searchUrl = 'https://github.com/search?q=' + userToSearch + '&type=Users&utf8=%E2%9C%93';
+```
+
+Lets navigate to this page and wait to see if it actually searched?
+
+```js
+await page.goto(searchUrl);
+await page.waitFor(2*1000);
+```
 
 ### Extract and Save Emails 
 

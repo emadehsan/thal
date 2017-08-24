@@ -28,6 +28,12 @@ async function run() {
   await page.click(BUTTON_SELECTOR);
 
   await page.waitForNavigation();
+
+  let userToSearch = 'john';
+  let searchUrl = 'https://github.com/search?q=' + userToSearch + '&type=Users&utf8=%E2%9C%93';
+
+  await page.goto(searchUrl);
+  await page.waitFor(2*1000);
   
   browser.close();
 }
