@@ -161,6 +161,58 @@ await page.waitFor(2*1000);
 ```
 
 ### Extract and Save Emails 
+We are interested in extracting `username` and `email` of users. Lets copy the DOM element selectors like we did above.
+
+```js
+let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a > em';
+let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
+  
+let LENGHT_SELECTOR = '#user_search_results > div.user-list > div';
+```
+You can see that I also added `LENGHT_SELECTOR` above. If you look at the github page's code inside developers tool, you will observe that `div` with class `user-list` is actually housing multiple `div` each containing information about a single user.
+
+`Puppeteer` is in active development and at the time of this writing, it does have support to extract text from DOM elements. The support would be added in [future releases](github.com/GoogleChrome/puppeteer/issues/382).
+So, until `puppeteer` supports this, we will rely on `jsdom`, a package available via npm.
+
+```
+$ npm i --save jsdom
+```
+
+Add the following line at top of `index.js` to include the package.
+```js
+const jsdom = require('jsdom');
+const { JSDOM } = jsdom;
+```
+Now, when we navigate to page with search results, we will use `page.content` method to get the content of the page as a string and use `jsdom` to parse that into a `DOM` instance. And we can access the normal javascript DOM methods. 
+
+```js
+let content = await page.content();
+let DOM = new JSDOM(content);
+
+let listLength = DOM.window.document.querySelector(LENGHT_SELECTOR);
+```
+
+Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
+
+```js
+// let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a > em';
+let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > a > em';
+// let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
+let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
+```
+The loop and extraction
+```js
+for (let i = 1; i <= listLength; i++) {
+  // change the index to the next child
+  let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
+  let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
+  
+  let username = DOM.window.document.querySelector(usernameSelector);
+  let email = DOM.window.document.querySelector(emailSelector);
+
+  console.log(username, ' -> ', email);
+}
+```
 
 ### Move to next page
 
