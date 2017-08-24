@@ -190,6 +190,7 @@ let content = await page.content();
 let DOM = new JSDOM(content);
 
 let listLength = DOM.window.document.querySelector(LENGHT_SELECTOR);
+listLength = parseInt(listLength);
 ```
 
 Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
@@ -214,7 +215,61 @@ for (let i = 1; i <= listLength; i++) {
 }
 ```
 
-### Move to next page
+### Go over all the pages
+First we would extimate the last page number in with search results. At search results page, on top, you can see **69,769 users** at the time of this writing.
+
+**Fun Fact: If you compare with the previous screen shot of the page, you will notice that 6 more *john* s have joined GitHub in the matter of a few hours.**
+
+![Number of search items](./media/num-results.png)
+
+Copy its selector from developer tools. We would write a new function below the `run` function to return the number of pages we can go through.
+
+```js
+async function getNumPages(DOM) {
+  let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3'
+
+  let numUsers = DOM.window.document.querySelector(NUM_USER_SELECTOR).innerHTML;
+  numUsers = parseInt(numUsers);
+
+  /*
+  * GitHub shows 10 resuls per page, so
+  */
+  let numPages = Math.ceil( numUsers/10 );
+  return numPages;
+}
+```
+
+At the bottom of the search results page, if you hover the mouse over buttons with page numbers, you can see they link to the next pages. The link to 2nd page with 
+results is `https://github.com/search?p=2&q=john&type=Users&utf8=%E2%9C%93`. Notice the `p=2` query paramter in the URL. This will help us navigate to the next page.
+
+After adding an outer loop to go through all the pages around our previous loop, the code looks like
+```js
+let numPages = getNumPages(DOM);
+
+for (let h = 1; h <= numPages; h++) {
+
+	let pageUrl = searchUrl + '&p=' + h;
+	let users = [];
+
+	await page.goto(pageUrl);
+	content = await page.content();
+	DOM = new JSDOM(content);
+
+	for (let i = 1; i <= listLength; i++) {
+		// change the hmtl index to the next child
+		let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
+		let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
+
+		let username = DOM.window.document.querySelector(usernameSelector);
+		let email = DOM.window.document.querySelector(emailSelector);
+
+		console.log(username, ' -> ', email);
+
+		users.push({username: username, email: email});
+	}
+	// TODO save users
+}
+```
 
 ## To the Cloud
 
