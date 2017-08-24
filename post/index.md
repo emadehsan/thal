@@ -73,8 +73,66 @@ If you go to GitHub and search for "john" without quotes, then click the users t
 
 ![Johns](./media/all-johns.png) 
 
-Some of them have made their emails publically visible and some have choosen not to. But the thing is you can't see these emails without logging in. So,
+Some of them have made their emails publically visible and some have choosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
 
+Add a file `creds.js` in project root. I highly recomment signing up for new account with a new dummy email because you **might** end up getting your account blocked.
+```js
+module.exports = {
+    username: '<GITHUB_USERNAME>',
+    password: '<GITHUB_PASSWORD>'
+}
+```
+Add another file `.gitignore` and put following content inside it:
+
+```
+node_modules/
+creds.js
+```
+#### Laucnh in non headless
+For visual debugging, make chrome launch with GUI by passing an object with `headless: false` to `launch` method.
+```js
+const browser = await puppeteer.launch({
+  headless: false
+});
+```
+
+Lets navigate to login
+```js
+await page.goto('https://github.com/login');
+```
+
+Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address**. From developers tool, right click on the highlighted code and select `Copy` then `Copy selector`. Paste that value to following constant
+
+```js
+const USERNAME_SELECTOR = '#login_field'; // "#login_field" is the copied value
+```
+Repeat the process for Password input box and Sign in button. You would have following
+
+```js
+// dom element selectors
+const USERNAME_SELECTOR = '#login_field';
+const PASSWORD_SELECTOR = '#password';
+const BUTTON_SELECTOR = '#login > form > div.auth-form-body.mt-3 > input.btn.btn-primary.btn-block';
+```
+#### Logging in
+Puppeteer provides methods `click` to click a DOM element and `type` to type text in some input box. Let's fill in the credentials and type username & password then click login and wait for redirect.
+
+Up on top, `require` `cres.js` file.
+```js
+const CREDS = require('./creds');
+```
+And then
+```js
+await page.click(USERNAME_SELECTOR);
+await page.type(CREDS.username);
+
+await page.click(PASSWORD_SELECTOR);
+await page.type(CREDS.password);
+
+await page.click(BUTTON_SELECTOR);
+
+await page.waitForNavigation();
+```
 
 
 ### Search GitHub
