@@ -1,0 +1,29 @@
+{
+  "name": "thal",
+  "version": "1.0.0",
+  "description": "Web Scrapper with Chrome Headless & Puppeteer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/emadehsan/thal.git"
+  },
+  "keywords": [
+    "Puppeteer",
+    "Chrome",
+    "Headless",
+    "Scrapping",
+    "Thal"
+  ],
+  "author": "Emad Ehsan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/emadehsan/thal/issues"
+  },
+  "homepage": "https://github.com/emadehsan/thal#readme",
+  "dependencies": {
+    "puppeteer": "git+https://github.com/GoogleChrome/puppeteer.git"
+  }
+}
