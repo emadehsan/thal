@@ -39,15 +39,21 @@ $ npm i --save mongoose
 ## Coding
 We wil start by taking a screenshot of the page. This is code from there documentation.
 
+### Screenshot
 ```js
 const puppeteer = require('puppeteer');
 
-puppeteer.launch({timeout: 60*1000}).then(async browser => {
+async function run() {
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
+  
   await page.goto('https://github.com');
   await page.screenshot({path: 'screenshots/github.png'});
+  
   browser.close();
-});
+}
+
+run();
 ```
 
 If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. For a long time, a negative argument put against `Node` was [Callback Hell](http://callbackhell.com/). [`Promises`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise) came along but still there was something missing. 
@@ -61,6 +67,23 @@ $ node index.js
 The screenshot is saved inside `screenshots/` dir.
 
 ![GitHub](../screenshots/github.png)
+
+### Login to GitHub
+If you go to GitHub and search for "john" without quotes, then click the users tab. You will see list of all users with names. 
+
+![Johns](./media/all-johns.png) 
+
+Some of them have made their emails publically visible and some have choosen not to. But the thing is you can't see these emails without logging in. So,
+
+
+
+### Search GitHub
+
+### Extract and Save Emails 
+
+### Move to next page
+
+## To the Cloud
 
 ## End note
 Deserts symbolize vastness and are witness of the struggles and sacrifices of people who `Traverse` through these gaint mountains of sand. `Thal` is desert in Pakistan spanning accross multiple districts including my home district. Somewhat similar is the case with `Internet` that we `Traversed` today. That's why I named the repository `Thal`.
