@@ -87,7 +87,8 @@ module.exports = {
 
 Add another file `.gitignore` and put following content inside it:
 
-```
+```txt
+
 node_modules/
 creds.js
 ```
