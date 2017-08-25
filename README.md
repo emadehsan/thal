@@ -1,7 +1,7 @@
 
-# Scrapping guide to Puppeteer and Chrome Headless
+# Getting started with Puppeteer and Chrome Headless for Web Scrapping
 
-`Puppeteer` is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. The prominent of these are **PhantomJS** and **Selenium IDE for Firefox**.
+[`Puppeteer`](https://github.com/GoogleChrome/puppeteer) is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. The prominent of these are **PhantomJS** and **Selenium IDE for Firefox**.
 
 For sure, Chrome being the market leader in web browsing, **Chrome Headless** is going to industry leader in **Automated Testing** of web applications. So, I have put together this starter guide on how to get started with `Web Scrapping` in **Chrome Headless**.
 
@@ -16,24 +16,31 @@ Before we start, we need following tools installed. Head over to there websites 
 ## Project setup
 
 Start off by making the project directory
+
 ```
 $ mkdir thal
 $ cd thal
 ```
+
 Initiate NPM. And put in the necessary details.
+
 ```
 $ npm init
 ```
+
 Install `Puppeteer`. Its not stable and repository is updated daily. If you want to avail the latest functionality you can install it directly from its GitHub repository.
+
 ```
 $ npm i --save puppeteer
 ```
+
 Puppeteer includes its own chrome / chromium, that is guaranted to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
 
 ## Coding
 We wil start by taking a screenshot of the page. This is code from there documentation.
 
 ### Screenshot
+
 ```js
 const puppeteer = require('puppeteer');
 
@@ -53,9 +60,11 @@ run();
 If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`. 
 
 Save this inside `index.js` inside project directory. Run in with
+
 ```
 $ node index.js
 ```
+
 The screenshot is saved inside `screenshots/` dir.
 
 ![GitHub](./screenshots/github.png)
@@ -68,20 +77,24 @@ If you go to GitHub and search for *john*, then click the users tab. You will se
 Some of them have made their emails publically visible and some have choosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
 
 Add a file `creds.js` in project root. I highly recomment signing up for new account with a new dummy email because you **might** end up getting your account blocked.
+
 ```js
 module.exports = {
     username: '<GITHUB_USERNAME>',
     password: '<GITHUB_PASSWORD>'
 }
 ```
+
 Add another file `.gitignore` and put following content inside it:
 
 ```
 node_modules/
 creds.js
 ```
+
 #### Launch in non headless
 For visual debugging, make chrome launch with GUI by passing an object with `headless: false` to `launch` method.
+
 ```js
 const browser = await puppeteer.launch({
   headless: false
@@ -89,6 +102,7 @@ const browser = await puppeteer.launch({
 ```
 
 Lets navigate to login
+
 ```js
 await page.goto('https://github.com/login');
 ```
@@ -103,6 +117,7 @@ Paste that value to following constant
 ```js
 const USERNAME_SELECTOR = '#login_field'; // "#login_field" is the copied value
 ```
+
 Repeat the process for Password input box and Sign in button. You would have following
 
 ```js
@@ -111,14 +126,18 @@ const USERNAME_SELECTOR = '#login_field';
 const PASSWORD_SELECTOR = '#password';
 const BUTTON_SELECTOR = '#login > form > div.auth-form-body.mt-3 > input.btn.btn-primary.btn-block';
 ```
+
 #### Logging in
 Puppeteer provides methods `click` to click a DOM element and `type` to type text in some input box. Let's fill in the credentials then click login and wait for redirect.
 
 Up on top, require `creds.js` file.
+
 ```js
 const CREDS = require('./creds');
 ```
+
 And then
+
 ```js
 await page.click(USERNAME_SELECTOR);
 await page.type(CREDS.username);
@@ -161,6 +180,7 @@ let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(
   
 let LENGHT_SELECTOR_CLASS = 'user-list-item';
 ```
+
 You can see that I also added `LENGHT_SELECTOR_CLASS` above. If you look at the github page's code inside developers tool, you will observe that `div`s with class `user-list-item` are actually housing information about a single user each.
 
 `Puppeteer` is in active development and at the time of this writing, it does have support to extract text from DOM elements. The support would be added in [future releases](github.com/GoogleChrome/puppeteer/issues/382).
@@ -171,10 +191,12 @@ $ npm i --save jsdom
 ```
 
 Add the following line at top of `index.js` to include the package.
+
 ```js
 const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 ```
+
 Now, when we navigate to page with search results, we will use `page.content` method to get the content of the page as a string and use `jsdom` to parse that into a `DOM` instance. And we can access the normal javascript DOM methods. 
 
 ```js
@@ -192,7 +214,9 @@ let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-chi
 // let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
 let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
 ```
+
 The loop and extraction
+
 ```js
 for (let i = 1; i <= listLength; i++) {
     // change the index to the next child
@@ -214,6 +238,7 @@ for (let i = 1; i <= listLength; i++) {
     // TODO save this user
   }
 ```
+
 Now if you run the script with `node index.js` you would see usernames and there corresponding emails printed.
 
 ### Go over all the pages
@@ -250,6 +275,7 @@ At the bottom of the search results page, if you hover the mouse over buttons wi
 results is `https://github.com/search?p=2&q=john&type=Users&utf8=%E2%9C%93`. Notice the `p=2` query paramter in the URL. This will help us navigate to the next page.
 
 After adding an outer loop to go through all the pages around our previous loop, the code looks like
+
 ```js
 let numPages = await getNumPages(DOM);
 	
@@ -319,6 +345,7 @@ const User = require('./models/user');
 ```
 
 Add the following function at bottom of `index.js` to **upsert** (update or insert) the User model
+
 ```js
 function upsertUser(userObj) {
 	
@@ -345,6 +372,7 @@ upsertUser({
   dateCrawled: new Date()
 });
 ```
+
 To check if you are actually getting users saved, get inside mongo shell
 
 ```
