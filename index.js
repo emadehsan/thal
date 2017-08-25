@@ -22,15 +22,15 @@ async function run() {
 	const PASSWORD_SELECTOR = '#password';
 	const BUTTON_SELECTOR = '#login > form > div.auth-form-body.mt-3 > input.btn.btn-primary.btn-block';
 
-	// await page.click(USERNAME_SELECTOR);
-	// await page.type(CREDS.username);
+	await page.click(USERNAME_SELECTOR);
+	await page.type(CREDS.username);
 
-	// await page.click(PASSWORD_SELECTOR);
-	// await page.type(CREDS.password);
+	await page.click(PASSWORD_SELECTOR);
+	await page.type(CREDS.password);
 
-	// await page.click(BUTTON_SELECTOR);
+	await page.click(BUTTON_SELECTOR);
 
-	// await page.waitForNavigation();
+	await page.waitForNavigation();
 
 	let userToSearch = 'john';
 	let searchUrl = 'https://github.com/search?q=' + userToSearch + '&type=Users&utf8=%E2%9C%93';
@@ -44,15 +44,13 @@ async function run() {
 	// let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > ul > li:nth-child(2) > a';
 	let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
 
-	let LENGHT_SELECTOR = '#user_search_results > div.user-list > div';
+	let LENGHT_SELECTOR_CLASS = 'user-list-item';
 
 	let content = await page.content();
 	let DOM = new JSDOM(content);
 
-	let listLength = DOM.window.document.querySelector(LENGHT_SELECTOR);
-	listLength = parseInt(listLength);
-
-	let numPages = getNumPages(DOM);
+	let numPages = await getNumPages(DOM);
+	console.log('Numpages: ', numPages);
 	
 	for (let h = 1; h <= numPages; h++) {
 
@@ -63,6 +61,10 @@ async function run() {
 		content = await page.content();
 		DOM = new JSDOM(content);
 
+		let listLength = DOM.window.document.getElementsByClassName(LENGHT_SELECTOR_CLASS).length;
+		
+		console.log('lisLenght: ', listLength);
+
 		for (let i = 1; i <= listLength; i++) {
 			// change the hmtl index to the next child
 			let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
@@ -70,6 +72,12 @@ async function run() {
 
 			let username = DOM.window.document.querySelector(usernameSelector);
 			let email = DOM.window.document.querySelector(emailSelector);
+
+			if (!email) 
+				continue;
+
+			username = username.innerHTML;
+			email = email.innerHTML;
 
 			console.log(username, ' -> ', email);
 
@@ -85,8 +93,14 @@ async function run() {
 async function getNumPages(DOM) {
 	let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3'
 
-	let numUsers = DOM.window.document.querySelector(NUM_USER_SELECTOR).innerHTML;
-	numUsers = parseInt(numUsers);
+	let inner = DOM.window.document.querySelector(NUM_USER_SELECTOR).innerHTML;
+
+	// format is: "69,803 users"
+	inner = inner.replace(',', '').replace(' users', '');
+
+	let numUsers = parseInt(inner);
+
+	console.log('numUsers: ', numUsers);
 
 	/*
 	* GitHub shows 10 resuls per page, so

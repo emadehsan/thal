@@ -278,7 +278,7 @@ Create a directory `models`. Create a file `user.js` inside and put the followin
 
 ```js
 
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 let userSchema = new mongoose.Schema({
     username: String,
@@ -290,6 +290,9 @@ let User = mongoose.model('User', userSchema);
 
 module.exports = User;
 ```
+
+
+---save to db using mongoose ---
 
 ## To the Cloud
 
