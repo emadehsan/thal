@@ -25,6 +25,7 @@
   "homepage": "https://github.com/emadehsan/thal#readme",
   "dependencies": {
     "jsdom": "^11.2.0",
+    "mongoose": "^4.11.8",
     "puppeteer": "git+https://github.com/GoogleChrome/puppeteer.git"
   }
 }

@@ -32,10 +32,8 @@ Now install `Puppeteer`. As of this writing, its latest version is `0.9.0` which
 ```
 $ npm i --save https://github.com/GoogleChrome/puppeteer/
 ```
-Puppeteer includes its own chrome, that is guaranted to work headless. So each time you install / update puppeteer, it will download its specific chrome version. Also install [`mongoose`](http://mongoosejs.com/), a wrapper around MongoDB to help ease the insertion, updation operations.
-```
-$ npm i --save mongoose
-```
+Puppeteer includes its own chrome, that is guaranted to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
+
 ## Coding
 We wil start by taking a screenshot of the page. This is code from there documentation.
 
@@ -294,9 +292,13 @@ for (let h = 1; h <= numPages; h++) {
 ```
 
 ### Save to MongoDB
-The part with `puppeteer` is over now. We will use `mongoose` to store the information in to `MongoDB`. Its a ORM (Objec Relational Model FIXME insert wiki link) to store information into the database.
+The part with `puppeteer` is over now. We will use `mongoose` to store the information in to `MongoDB`. Its an [ORM](https://en.wikipedia.org/wiki/Object-relational_mapping), actually just a library to facilitate information storage and retrieval from the database.
 
-Create a directory `models`. Create a file `user.js` inside and put the following code in it.
+```
+$ npm i --save mongoose
+```
+
+MongoDB is a Schema-less NoSQL database. But we can make it follow some rules using Mongoose. First we would have to create a `Model` which is just representation of MongoDB `Collection` in code. Create a directory `models`. Create a file `user.js` inside and put the following code in it, the structure of our collection. Next whenever we insert something into `users` collection with mongoose, it would have to follow this structure.
 
 ```js
 
@@ -313,8 +315,42 @@ let User = mongoose.model('User', userSchema);
 module.exports = User;
 ```
 
+Let's now actually insert. We don't want duplicate emails in our database. So, we only insert a user's information if the email is not already present. Otherwise we would just update the information. For this we would use mongoose's `Model.findOneAndUpdate` method.
 
----save to db using mongoose ---
+At the top of `index.js` add the imports
+
+```js
+const mongoose = require('mongoose');
+const User = require('./models/user');
+```
+
+Add the following function at bottom of `index.js` to **upsert** (update or insert) the User model
+```js
+function upsertUser(userObj) {
+	
+	const DB_URL = 'mongodb://localhost/thal';
+
+    if (mongoose.connection.readyState == 0) { mongoose.connect(DB_URL); }
+
+    // if this email exists, update the entry, don't insert
+	let conditions = { email: userObj.email };
+	let options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
+    User.findOneAndUpdate(conditions, userObj, options, (err, result) => {
+        if (err) throw err;
+    });
+}
+```
+
+Start MongoDB server. Put following code inside the for loops at the place of comment `// TODO save this users` in order to save the user
+
+```js
+upsertUser({
+  username: username,
+  email: email,
+  dateCrawled: new Date()
+});
+```
 
 ## To the Cloud
 

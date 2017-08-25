@@ -81,7 +81,11 @@ async function run() {
 
 			console.log(username, ' -> ', email);
 
-			// TODO save this users
+			upsertUser({
+				username: username,
+				email: email,
+				dateCrawled: new Date()
+			});
 		}
 	}
 
@@ -108,6 +112,9 @@ async function getNumPages(DOM) {
 }
 
 function upsertUser(userObj) {
+	
+	const DB_URL = 'mongodb://localhost/thal';
+
     if (mongoose.connection.readyState == 0) { mongoose.connect(DB_URL); }
 
     // if this email exists, update the entry, don't insert
