@@ -58,7 +58,7 @@ $ node index.js
 ```
 The screenshot is saved inside `screenshots/` dir.
 
-![GitHub](../screenshots/github.png)
+![GitHub](./screenshots/github.png)
 
 ### Login to GitHub
 If you go to GitHub and search for *john*, then click the users tab. You will see list of all users with names. 
