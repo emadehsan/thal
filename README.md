@@ -13,7 +13,7 @@ For sure, Chrome being the market leader in web browsing, **Chrome Headless** is
 In this guide we will scrap GitHub, login to it and extract and save emails of users using `Chrome Headless`, `Puppeteer`, `Node` and `MongoDB`. Don't worry GitHub have rate limiting mechanism in place to keep you under control but this post will give you good idea on Scrapping with Chrome Headless and Node. Also, alway stay updated with the [documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md) because `Puppeteer` is under development and APIs are prone to changes.
 
 ## Getting Started
-Before we start, we need following tools installed. Head over to there websites and install them.
+Before we start, we need following tools installed. Head over to their websites and install them.
 * [Node 8.+](https://nodejs.org)
 * [MongoDB](http://mongodb.com)
 
