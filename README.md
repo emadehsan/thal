@@ -1,5 +1,5 @@
 
-# Getting started with Puppeteer and Chrome Headless for Web Scrapping
+# Getting started with Puppeteer and Chrome Headless for Web Scraping
 
 **Here is a link to [Medium Article](https://medium.com/@e_mad_ehsan/getting-started-with-puppeteer-and-chrome-headless-for-web-scrapping-6bf5979dee3e)**
 
@@ -7,7 +7,7 @@
 
 [`Puppeteer`](https://github.com/GoogleChrome/puppeteer) is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. The prominent of these are **PhantomJS** and **Selenium IDE for Firefox**.
 
-For sure, Chrome being the market leader in web browsing, **Chrome Headless** is going to industry leader in **Automated Testing** of web applications. So, I have put together this starter guide on how to get started with `Web Scrapping` in **Chrome Headless**.
+For sure, Chrome being the market leader in web browsing, **Chrome Headless** is going to industry leader in **Automated Testing** of web applications. So, I have put together this starter guide on how to get started with `Web Scraping` in **Chrome Headless**.
 
 ## TL;DR
 In this guide we will scrap GitHub, login to it and extract and save emails of users using `Chrome Headless`, `Puppeteer`, `Node` and `MongoDB`. Don't worry GitHub have rate limiting mechanism in place to keep you under control but this post will give you good idea on Scrapping with Chrome Headless and Node. Also, alway stay updated with the [documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md) because `Puppeteer` is under development and APIs are prone to changes.
@@ -389,13 +389,13 @@ $ mongo
 You would see multiple users added there. This marks the crux of this gudie.
 
 ## Conclusion
-Chrome Headless and Puppeteer is the start of a new era in Web Scrapping and Automated Testing. Chrome Headless also supports WebGL. You can deploy your scrapper in cloud and sit back and let it do the heavy load. Remember to remove the `headless: false` option when you deploy on server.
+Chrome Headless and Puppeteer is the start of a new era in Web Scraping and Automated Testing. Chrome Headless also supports WebGL. You can deploy your scraper in cloud and sit back and let it do the heavy load. Remember to remove the `headless: false` option when you deploy on server.
 
-* While scrapping, you might be halted by GitHub's rate limiting
+* While scraping, you might be halted by GitHub's rate limiting
 
 ![Whoa](./media/whoa.png)
 
 * Another thing I noticed, you cannot go beyond 100 pages on GitHub.
 
 ## End note
-Deserts symbolize vastness and are witness of the struggles and sacrifices of people who `traversed` through these gaint mountains of sand. [**Thal**](https://en.wikipedia.org/wiki/Thal_Desert) is desert in Pakistan spanning accross multiple districts including my home district Bhakkar. Somewhat similar is the case with `Internet` that we `traversed` today in quest of data. That's why I named the repository `Thal`. If you like this effort, please like and share this with others. If you have any suggestions, comment here or approach me directly [@e_mad_ehsan](https://twitter.com/e_mad_ehsan). I would love to hear from you.
+Deserts symbolize vastness and are witness of the struggles and sacrifices of people who `traversed` through these giant mountains of sand. [**Thal**](https://en.wikipedia.org/wiki/Thal_Desert) is a desert in Pakistan spanning accross multiple districts including my home district Bhakkar. Somewhat similar is the case with `Internet` that we `traversed` today in quest of data. That's why I named the repository `Thal`. If you like this effort, please like and share this with others. If you have any suggestions, comment here or approach me directly [@e_mad_ehsan](https://twitter.com/e_mad_ehsan). I would love to hear from you.
