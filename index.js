@@ -55,7 +55,6 @@ async function run() {
 		let pageUrl = searchUrl + '&p=' + h;
 
 		await page.goto(pageUrl);
-		content = await page.content();
 
         let listLength = await page.evaluate((sel) => {
             return document.getElementsByClassName(sel).length;

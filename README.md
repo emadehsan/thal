@@ -188,27 +188,12 @@ let LENGHT_SELECTOR_CLASS = 'user-list-item';
 
 You can see that I also added `LENGHT_SELECTOR_CLASS` above. If you look at the github page's code inside developers tool, you will observe that `div`s with class `user-list-item` are actually housing information about a single user each.
 
-`Puppeteer` is in active development and at the time of this writing, it does have support to extract text from DOM elements. The support would be added in [future releases](github.com/GoogleChrome/puppeteer/issues/382).
-So, until `puppeteer` supports this, we will rely on `jsdom`, a package available via npm.
-
-```
-$ npm i --save jsdom
-```
-
-Add the following line at top of `index.js` to include the package.
+Currently one way to extract text from an element is by using `evaluate` method of `Page` or `ElementHandle`. When we navigate to page with search results, we will use `page.evaluate` method to get the lenght of users list on the page. The `evaluate` method evaluates the code inside browser context.
 
 ```js
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-```
-
-Now, when we navigate to page with search results, we will use `page.content` method to get the content of the page as a string and use `jsdom` to parse that into a `DOM` instance. And we can access the normal javascript DOM methods.
-
-```js
-let content = await page.content();
-let DOM = new JSDOM(content);
-
-let listLength = DOM.window.document.getElementsByClassName(LENGHT_SELECTOR_CLASS).length;
+let listLength = await page.evaluate((sel) => {
+    return document.getElementsByClassName(sel).length;
+  }, LENGHT_SELECTOR_CLASS);
 ```
 
 Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index nside the seletors to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
@@ -228,15 +213,18 @@ for (let i = 1; i <= listLength; i++) {
     let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
     let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
 
-    let username = DOM.window.document.querySelector(usernameSelector);
-    let email = DOM.window.document.querySelector(emailSelector);
+    let username = await page.evaluate((sel) => {
+        return document.querySelector(sel).getAttribute('href').replace('/', '');
+      }, usernameSelector);
+
+    let email = await page.evaluate((sel) => {
+        let element = document.querySelector(sel);
+        return element? element.innerHTML: null;
+      }, emailSelector);
 
     // not all users have emails visible
     if (!email)
       continue;
-
-    username = username.getAttribute('href').replace('/', '');
-    email = email.innerHTML;
 
     console.log(username, ' -> ', email);
 
@@ -247,7 +235,7 @@ for (let i = 1; i <= listLength; i++) {
 Now if you run the script with `node index.js` you would see usernames and there corresponding emails printed.
 
 ### Go over all the pages
-First we would extimate the last page number with search results. At search results page, on top, you can see **69,769 users** at the time of this writing.
+First we would estimate the last page number with search results. At search results page, on top, you can see **69,769 users** at the time of this writing.
 
 **Fun Fact: If you compare with the previous screenshot of the page, you will notice that 6 more *john* s have joined GitHub in the matter of a few hours.**
 
@@ -256,23 +244,25 @@ First we would extimate the last page number with search results. At search resu
 Copy its selector from developer tools. We would write a new function below the `run` function to return the number of pages we can go through.
 
 ```js
-async function getNumPages(DOM) {
-	let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
+async function getNumPages(page) {
+  let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
 
-	let inner = DOM.window.document.querySelector(NUM_USER_SELECTOR).innerHTML;
+  let inner = await page.evaluate((sel) => {
+    return document.querySelector(sel).innerHTML;
+  }, NUM_USER_SELECTOR);
 
-	// format is: "69,803 users"
-	inner = inner.replace(',', '').replace(' users', '');
+  // format is: "69,803 users"
+  inner = inner.replace(',', '').replace(' users', '');
 
-	let numUsers = parseInt(inner);
+  let numUsers = parseInt(inner);
 
-	console.log('numUsers: ', numUsers);
+  console.log('numUsers: ', numUsers);
 
-	/*
-	* GitHub shows 10 resuls per page, so
-	*/
-	let numPages = Math.ceil(numUsers / 10);
-	return numPages;
+  /*
+  * GitHub shows 10 resuls per page, so
+  */
+  let numPages = Math.ceil(numUsers / 10);
+  return numPages;
 }
 ```
 
@@ -282,37 +272,42 @@ results is `https://github.com/search?p=2&q=john&type=Users&utf8=%E2%9C%93`. Not
 After adding an outer loop to go through all the pages around our previous loop, the code looks like
 
 ```js
-let numPages = await getNumPages(DOM);
+let numPages = await getNumPages(page);
+
+console.log('Numpages: ', numPages);
 
 for (let h = 1; h <= numPages; h++) {
 
-  let pageUrl = searchUrl + '&p=' + h;
+	let pageUrl = searchUrl + '&p=' + h;
 
-  await page.goto(pageUrl);
-  content = await page.content();
-  DOM = new JSDOM(content);
+	await page.goto(pageUrl);
 
-  let listLength = DOM.window.document.getElementsByClassName(LENGHT_SELECTOR_CLASS).length;
+  let listLength = await page.evaluate((sel) => {
+      return document.getElementsByClassName(sel).length;
+    }, LENGHT_SELECTOR_CLASS);
 
-  for (let i = 1; i <= listLength; i++) {
-    // change the index to the next child
-    let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
-    let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
+	for (let i = 1; i <= listLength; i++) {
+	  // change the index to the next child
+		let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
+		let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
 
-    let username = DOM.window.document.querySelector(usernameSelector);
-    let email = DOM.window.document.querySelector(emailSelector);
+    let username = await page.evaluate((sel) => {
+        return document.querySelector(sel).getAttribute('href').replace('/', '');
+      }, usernameSelector);
 
-    // not all users have emails visible
-    if (!email)
-      continue;
+    let email = await page.evaluate((sel) => {
+        let element = document.querySelector(sel);
+        return element? element.innerHTML: null;
+      }, emailSelector);
 
-    username = username.getAttribute('href').replace('/', '');
-    email = email.innerHTML;
+		// not all users have emails visible
+		if (!email)
+			continue;
 
-    console.log(username, ' -> ', email);
+		console.log(username, ' -> ', email);
 
     // TODO save this users
-  }
+	}
 }
 ```
 
