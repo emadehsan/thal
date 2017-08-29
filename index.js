@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const CREDS = require('./creds');
 const mongoose = require('mongoose');
 const User = require('./models/user');
 
@@ -21,10 +20,10 @@ async function run() {
   const BUTTON_SELECTOR = '#login > form > div.auth-form-body.mt-3 > input.btn.btn-primary.btn-block';
 
   await page.click(USERNAME_SELECTOR);
-  await page.type(CREDS.username);
+  await page.type(process.env.GITHUB_USERNAME);
 
   await page.click(PASSWORD_SELECTOR);
-  await page.type(CREDS.password);
+  await page.type(process.env.GITHUB_PASSWORD);
 
   await page.click(BUTTON_SELECTOR);
   await page.waitForNavigation();
