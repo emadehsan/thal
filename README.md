@@ -183,17 +183,17 @@ We are interested in extracting `username` and `email` of users. Lets copy the D
 let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
 let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
 
-let LENGHT_SELECTOR_CLASS = 'user-list-item';
+let LENGTH_SELECTOR_CLASS = 'user-list-item';
 ```
 
-You can see that I also added `LENGHT_SELECTOR_CLASS` above. If you look at the github page's code inside developers tool, you will observe that `div`s with class `user-list-item` are actually housing information about a single user each.
+You can see that I also added `LENGTH_SELECTOR_CLASS` above. If you look at the github page's code inside developers tool, you will observe that `div`s with class `user-list-item` are actually housing information about a single user each.
 
 Currently one way to extract text from an element is by using `evaluate` method of `Page` or `ElementHandle`. When we navigate to page with search results, we will use `page.evaluate` method to get the lenght of users list on the page. The `evaluate` method evaluates the code inside browser context.
 
 ```js
 let listLength = await page.evaluate((sel) => {
     return document.getElementsByClassName(sel).length;
-  }, LENGHT_SELECTOR_CLASS);
+  }, LENGTH_SELECTOR_CLASS);
 ```
 
 Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index nside the seletors to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
@@ -284,7 +284,7 @@ for (let h = 1; h <= numPages; h++) {
 
   	let listLength = await page.evaluate((sel) => {
     		return document.getElementsByClassName(sel).length;
-    	}, LENGHT_SELECTOR_CLASS);
+    	}, LENGTH_SELECTOR_CLASS);
 
 	for (let i = 1; i <= listLength; i++) {
 	  	// change the index to the next child

@@ -44,7 +44,7 @@ async function run() {
 	// let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > ul > li:nth-child(2) > a';
 	let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
 
-	let LENGHT_SELECTOR_CLASS = 'user-list-item';
+	let LENGTH_SELECTOR_CLASS = 'user-list-item';
 
     let numPages = await getNumPages(page);
 
@@ -58,7 +58,7 @@ async function run() {
 
         let listLength = await page.evaluate((sel) => {
             return document.getElementsByClassName(sel).length;
-        }, LENGHT_SELECTOR_CLASS);
+        }, LENGTH_SELECTOR_CLASS);
 
 		for (let i = 1; i <= listLength; i++) {
 			// change the index to the next child
