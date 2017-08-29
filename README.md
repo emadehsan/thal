@@ -53,7 +53,7 @@ async function run() {
   const page = await browser.newPage();
 
   await page.goto('https://github.com');
-  await page.screenshot({path: 'screenshots/github.png'});
+  await page.screenshot({ path: 'screenshots/github.png' });
 
   browser.close();
 }
@@ -159,14 +159,14 @@ await page.waitForNavigation();
 Now, we have logged in. We can programmatically click on search box, fill it and on the results page, click users tab. But there's an easy way. Search requests are usually GET requests. So, every thing is sent via url. So, manually type `john` inside search box and then click users tab and copy the url. It would be
 
 ```js
-let searchUrl = 'https://github.com/search?q=john&type=Users&utf8=%E2%9C%93';
+const searchUrl = 'https://github.com/search?q=john&type=Users&utf8=%E2%9C%93';
 ```
 
 Rearranging a bit
 
 ```js
-let userToSearch = 'john';
-let searchUrl = 'https://github.com/search?q=' + userToSearch + '&type=Users&utf8=%E2%9C%93';
+const userToSearch = 'john';
+const searchUrl = `https://github.com/search?q=${userToSearch}&type=Users&utf8=%E2%9C%93`;
 ```
 
 Lets navigate to this page and wait to see if it actually searched?
@@ -180,10 +180,10 @@ await page.waitFor(2*1000);
 We are interested in extracting `username` and `email` of users. Lets copy the DOM element selectors like we did above.
 
 ```js
-let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
-let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
+const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
+const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
 
-let LENGTH_SELECTOR_CLASS = 'user-list-item';
+const LENGTH_SELECTOR_CLASS = 'user-list-item';
 ```
 
 You can see that I also added `LENGTH_SELECTOR_CLASS` above. If you look at the github page's code inside developers tool, you will observe that `div`s with class `user-list-item` are actually housing information about a single user each.
@@ -199,10 +199,10 @@ let listLength = await page.evaluate((sel) => {
 Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index nside the seletors to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
 
 ```js
-// let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
-let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > a';
-// let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
-let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
+// const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
+const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > a';
+// const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
+const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
 ```
 
 The loop and extraction
@@ -245,14 +245,14 @@ Copy its selector from developer tools. We would write a new function below the 
 
 ```js
 async function getNumPages(page) {
-  let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
+  const NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
 
   let inner = await page.evaluate((sel) => {
-    return document.querySelector(sel).innerHTML;
+    let html = document.querySelector(sel).innerHTML;
+    
+    // format is: "69,803 users"
+    return html.replace(',', '').replace('users', '').trim();
   }, NUM_USER_SELECTOR);
-
-  // format is: "69,803 users"
-  inner = inner.replace(',', '').replace(' users', '');
 
   let numUsers = parseInt(inner);
 
