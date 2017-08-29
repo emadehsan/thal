@@ -5,7 +5,7 @@
 
 ![A Desert in painters perception](./media/desertious.jpg)
 
-[`Puppeteer`](https://github.com/GoogleChrome/puppeteer) is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. The prominent of these are **PhantomJS** and **Selenium IDE for Firefox**.
+[`Puppeteer`](https://github.com/GoogleChrome/puppeteer) is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. Including **PhantomJS**. **Selenium IDE for Firefox** has been discontinued due to lack of maintainers.
 
 For sure, Chrome being the market leader in web browsing, **Chrome Headless** is going to industry leader in **Automated Testing** of web applications. So, I have put together this starter guide on how to get started with `Web Scraping` in **Chrome Headless**.
 
