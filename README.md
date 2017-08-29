@@ -1,6 +1,10 @@
 
 # Getting started with Puppeteer and Chrome Headless for Web Scrapping
 
+**Here is a link to [Medium Article](https://medium.com/@e_mad_ehsan/getting-started-with-puppeteer-and-chrome-headless-for-web-scrapping-6bf5979dee3e)**
+
+![A Desert in painters perception](./media/desertious.jpg)
+
 [`Puppeteer`](https://github.com/GoogleChrome/puppeteer) is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. The prominent of these are **PhantomJS** and **Selenium IDE for Firefox**.
 
 For sure, Chrome being the market leader in web browsing, **Chrome Headless** is going to industry leader in **Automated Testing** of web applications. So, I have put together this starter guide on how to get started with `Web Scrapping` in **Chrome Headless**.
@@ -47,17 +51,17 @@ const puppeteer = require('puppeteer');
 async function run() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  
+
   await page.goto('https://github.com');
   await page.screenshot({path: 'screenshots/github.png'});
-  
+
   browser.close();
 }
 
 run();
 ```
 
-If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`. 
+If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`.
 
 Save this inside `index.js` inside project directory. Run in with
 
@@ -70,9 +74,9 @@ The screenshot is saved inside `screenshots/` dir.
 ![GitHub](./screenshots/github.png)
 
 ### Login to GitHub
-If you go to GitHub and search for *john*, then click the users tab. You will see list of all users with names. 
+If you go to GitHub and search for *john*, then click the users tab. You will see list of all users with names.
 
-![Johns](./media/all-johns.png) 
+![Johns](./media/all-johns.png)
 
 Some of them have made their emails publically visible and some have choosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
 
@@ -108,8 +112,8 @@ Lets navigate to login
 await page.goto('https://github.com/login');
 ```
 
-Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address**. From developers tool, right click on the highlighted code and 
-select `Copy` then `Copy selector`. 
+Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address**. From developers tool, right click on the highlighted code and
+select `Copy` then `Copy selector`.
 
 ![Copy dom element selector](./media/copy-selector.png)
 
@@ -172,13 +176,13 @@ await page.goto(searchUrl);
 await page.waitFor(2*1000);
 ```
 
-### Extract Emails 
+### Extract Emails
 We are interested in extracting `username` and `email` of users. Lets copy the DOM element selectors like we did above.
 
 ```js
 let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
 let LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
-  
+
 let LENGHT_SELECTOR_CLASS = 'user-list-item';
 ```
 
@@ -198,7 +202,7 @@ const jsdom = require('jsdom');
 const { JSDOM } = jsdom;
 ```
 
-Now, when we navigate to page with search results, we will use `page.content` method to get the content of the page as a string and use `jsdom` to parse that into a `DOM` instance. And we can access the normal javascript DOM methods. 
+Now, when we navigate to page with search results, we will use `page.content` method to get the content of the page as a string and use `jsdom` to parse that into a `DOM` instance. And we can access the normal javascript DOM methods.
 
 ```js
 let content = await page.content();
@@ -228,7 +232,7 @@ for (let i = 1; i <= listLength; i++) {
     let email = DOM.window.document.querySelector(emailSelector);
 
     // not all users have emails visible
-    if (!email) 
+    if (!email)
       continue;
 
     username = username.getAttribute('href').replace('/', '');
@@ -272,14 +276,14 @@ async function getNumPages(DOM) {
 }
 ```
 
-At the bottom of the search results page, if you hover the mouse over buttons with page numbers, you can see they link to the next pages. The link to 2nd page with 
+At the bottom of the search results page, if you hover the mouse over buttons with page numbers, you can see they link to the next pages. The link to 2nd page with
 results is `https://github.com/search?p=2&q=john&type=Users&utf8=%E2%9C%93`. Notice the `p=2` query paramter in the URL. This will help us navigate to the next page.
 
 After adding an outer loop to go through all the pages around our previous loop, the code looks like
 
 ```js
 let numPages = await getNumPages(DOM);
-	
+
 for (let h = 1; h <= numPages; h++) {
 
   let pageUrl = searchUrl + '&p=' + h;
@@ -289,7 +293,7 @@ for (let h = 1; h <= numPages; h++) {
   DOM = new JSDOM(content);
 
   let listLength = DOM.window.document.getElementsByClassName(LENGHT_SELECTOR_CLASS).length;
-  
+
   for (let i = 1; i <= listLength; i++) {
     // change the index to the next child
     let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
@@ -299,7 +303,7 @@ for (let h = 1; h <= numPages; h++) {
     let email = DOM.window.document.querySelector(emailSelector);
 
     // not all users have emails visible
-    if (!email) 
+    if (!email)
       continue;
 
     username = username.getAttribute('href').replace('/', '');
@@ -349,7 +353,7 @@ Add the following function at bottom of `index.js` to **upsert** (update or inse
 
 ```js
 function upsertUser(userObj) {
-	
+
 	const DB_URL = 'mongodb://localhost/thal';
 
   if (mongoose.connection.readyState == 0) { mongoose.connect(DB_URL); }
