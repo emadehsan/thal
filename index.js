@@ -3,9 +3,6 @@ const puppeteer = require('puppeteer');
 
 const CREDS = require('./creds');
 
-const jsdom = require('jsdom');
-const { JSDOM } = jsdom;
-
 const mongoose = require('mongoose');
 const User = require('./models/user');
 
@@ -49,35 +46,38 @@ async function run() {
 
 	let LENGHT_SELECTOR_CLASS = 'user-list-item';
 
-	let content = await page.content();
-	let DOM = new JSDOM(content);
+    let numPages = await getNumPages(page);
 
-	let numPages = await getNumPages(DOM);
-	
+    console.log('Numpages: ', numPages);
+
 	for (let h = 1; h <= numPages; h++) {
 
 		let pageUrl = searchUrl + '&p=' + h;
 
 		await page.goto(pageUrl);
 		content = await page.content();
-		DOM = new JSDOM(content);
 
-		let listLength = DOM.window.document.getElementsByClassName(LENGHT_SELECTOR_CLASS).length;
-		
+        let listLength = await page.evaluate((sel) => {
+            return document.getElementsByClassName(sel).length;
+        }, LENGHT_SELECTOR_CLASS);
+
 		for (let i = 1; i <= listLength; i++) {
 			// change the index to the next child
 			let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
 			let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
 
-			let username = DOM.window.document.querySelector(usernameSelector);
-			let email = DOM.window.document.querySelector(emailSelector);
+            let username = await page.evaluate((sel) => {
+                return document.querySelector(sel).getAttribute('href').replace('/', '');
+            }, usernameSelector);
+
+            let email = await page.evaluate((sel) => {
+                let element = document.querySelector(sel);
+                return element? element.innerHTML: null;
+            }, emailSelector);
 
 			// not all users have emails visible
-			if (!email) 
+			if (!email)
 				continue;
-
-			username = username.getAttribute('href').replace('/', '');
-			email = email.innerHTML;
 
 			console.log(username, ' -> ', email);
 
@@ -92,17 +92,19 @@ async function run() {
 	browser.close();
 }
 
-async function getNumPages(DOM) {
-	let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
+async function getNumPages(page) {
+    let NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
 
-	let inner = DOM.window.document.querySelector(NUM_USER_SELECTOR).innerHTML;
+    let inner = await page.evaluate((sel) => {
+        return document.querySelector(sel).innerHTML;
+    }, NUM_USER_SELECTOR);
 
-	// format is: "69,803 users"
+    // format is: "69,803 users"
 	inner = inner.replace(',', '').replace(' users', '');
 
 	let numUsers = parseInt(inner);
 
-	console.log('numUsers: ', numUsers);
+    console.log('numUsers: ', numUsers);
 
 	/*
 	* GitHub shows 10 resuls per page, so
@@ -112,7 +114,7 @@ async function getNumPages(DOM) {
 }
 
 function upsertUser(userObj) {
-	
+
 	const DB_URL = 'mongodb://localhost/thal';
 
     if (mongoose.connection.readyState == 0) { mongoose.connect(DB_URL); }
