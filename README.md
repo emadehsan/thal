@@ -41,7 +41,7 @@ $ npm i --save puppeteer
 Puppeteer includes its own chrome / chromium, that is guaranted to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
 
 ## Coding
-We wil start by taking a screenshot of the page. This is code from there documentation.
+We wil start by taking a screenshot of the page. This is code from their documentation.
 
 ### Screenshot
 
@@ -63,13 +63,20 @@ run();
 
 If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`.
 
-Save this inside `index.js` inside project directory. Run in with
+Create the scresnhots dir.
+
+```
+$ mkdir screenshots
+```
+
+Save this `index.js` inside project directory. Run in with
+
 
 ```
 $ node index.js
 ```
 
-The screenshot is saved inside `screenshots/` dir.
+The screenshot is now saved inside `screenshots/` dir.
 
 ![GitHub](./screenshots/github.png)
 
