@@ -41,7 +41,7 @@ $ npm i --save puppeteer
 Puppeteer includes its own chrome / chromium, that is guaranted to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
 
 ## Coding
-We wil start by taking a screenshot of the page. This is code from there documentation.
+We wil start by taking a screenshot of the page. This is code from their documentation.
 
 ### Screenshot
 
