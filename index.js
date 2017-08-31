@@ -29,7 +29,7 @@ async function run() {
 	await page.type(CREDS.password);
 
 	await page.click(BUTTON_SELECTOR);
-
+    await page.click(BUTTON_SELECTOR);
 	await page.waitForNavigation();
 
 	let userToSearch = 'john';
@@ -37,7 +37,7 @@ async function run() {
 	// let searchUrl = 'https://github.com/search?utf8=%E2%9C%93&q=bashua&type=Users';
 
 	await page.goto(searchUrl);
-	await page.waitFor(2 * 1000);
+	await page.waitFor(3 * 3000);
 
 	// let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
 	let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > a';
@@ -108,7 +108,7 @@ async function getNumPages(page) {
 	/*
 	* GitHub shows 10 resuls per page, so
 	*/
-	let numPages = Math.ceil(numUsers / 10);
+	let numPages = Math.ceil(numUsers / 11);
 	return numPages;
 }
 
