@@ -3,6 +3,8 @@
 
 **Here is a link to [Medium Article](https://medium.com/@e_mad_ehsan/getting-started-with-puppeteer-and-chrome-headless-for-web-scrapping-6bf5979dee3e)**
 
+**Here is the [Chinese Version](https://github.com/csbun/thal) thanks to [@csbun](https://github.com/csbun/)** 
+
 ![A Desert in painters perception](./media/desertious.jpg)
 
 [`Puppeteer`](https://github.com/GoogleChrome/puppeteer) is official tool for Chrome Headless by Google Chrome team. Since the official announcement of Chrome Headless, many of the industry standard libraries for automated testing have been discontinued by their maintainers. Including **PhantomJS**. **Selenium IDE for Firefox** has been discontinued due to lack of maintainers.
@@ -38,10 +40,10 @@ Install `Puppeteer`. Its not stable and repository is updated daily. If you want
 $ npm i --save puppeteer
 ```
 
-Puppeteer includes its own chrome / chromium, that is guaranted to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
+Puppeteer includes its own chrome / chromium, that is guaranteed to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
 
 ## Coding
-We wil start by taking a screenshot of the page. This is code from their documentation.
+We will start by taking a screenshot of the page. This is code from there documentation.
 
 ### Screenshot
 
@@ -62,15 +64,15 @@ run();
 ```
 
 If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`.
+Save this in `index.js` inside project directory.
 
-Create the scresnhots dir.
+Also create the screenshots dir.
 
 ```
 $ mkdir screenshots
 ```
 
-Save this `index.js` inside project directory. Run in with
-
+Run the code with
 
 ```
 $ node index.js
@@ -85,9 +87,9 @@ If you go to GitHub and search for *john*, then click the users tab. You will se
 
 ![Johns](./media/all-johns.png)
 
-Some of them have made their emails publically visible and some have choosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
+Some of them have made their emails publically visible and some have chosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
 
-Add a file `creds.js` in project root. I highly recomment signing up for new account with a new dummy email because you **might** end up getting your account blocked.
+Add a file `creds.js` in project root. I highly recommend signing up for new account with a new dummy email because you **might** end up getting your account blocked.
 
 ```js
 module.exports = {
@@ -203,7 +205,7 @@ let listLength = await page.evaluate((sel) => {
   }, LENGTH_SELECTOR_CLASS);
 ```
 
-Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index nside the seletors to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
+Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index inside the selectors to point to the next DOM element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
 
 ```js
 // let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
@@ -388,7 +390,7 @@ $ mongo
 > db.users.find().pretty()
 ```
 
-You would see multiple users added there. This marks the crux of this gudie.
+You would see multiple users added there. This marks the crux of this guide.
 
 ## Conclusion
 Chrome Headless and Puppeteer is the start of a new era in Web Scraping and Automated Testing. Chrome Headless also supports WebGL. You can deploy your scraper in cloud and sit back and let it do the heavy load. Remember to remove the `headless: false` option when you deploy on server.
