@@ -121,7 +121,7 @@ Lets navigate to login
 await page.goto('https://github.com/login');
 ```
 
-Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address**. From developers tool, right click on the highlighted code and
+Open [https://github.com/login](https://github.com/login) in your browser. Right click on input box below **Username or email address** and select `Inspect`. From developers tool, right click on the highlighted code and
 select `Copy` then `Copy selector`.
 
 ![Copy dom element selector](./media/copy-selector.png)
