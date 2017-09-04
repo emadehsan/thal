@@ -12,7 +12,7 @@
 For sure, Chrome being the market leader in web browsing, **Chrome Headless** is going to industry leader in **Automated Testing** of web applications. So, I have put together this starter guide on how to get started with `Web Scraping` in **Chrome Headless**.
 
 ## TL;DR
-In this guide we will scrap GitHub, login to it and extract and save emails of users using `Chrome Headless`, `Puppeteer`, `Node` and `MongoDB`. Don't worry GitHub have rate limiting mechanism in place to keep you under control but this post will give you good idea on Scrapping with Chrome Headless and Node. Also, alway stay updated with the [documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md) because `Puppeteer` is under development and APIs are prone to changes.
+In this guide we will scrape GitHub, login to it and extract and save emails of users using `Chrome Headless`, `Puppeteer`, `Node` and `MongoDB`. Don't worry GitHub have rate limiting mechanism in place to keep you under control but this post will give you good idea on Scrapping with Chrome Headless and Node. Also, alway stay updated with the [documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md) because `Puppeteer` is under development and APIs are prone to changes.
 
 ## Getting Started
 Before we start, we need following tools installed. Head over to their websites and install them.
@@ -43,7 +43,7 @@ $ npm i --save puppeteer
 Puppeteer includes its own chrome / chromium, that is guaranteed to work headless. So each time you install / update puppeteer, it will download its specific chrome version.
 
 ## Coding
-We will start by taking a screenshot of the page. This is code from there documentation.
+We will start by taking a screenshot of the page. This is code from their documentation.
 
 ### Screenshot
 
@@ -64,14 +64,21 @@ run();
 ```
 
 If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`.
+Save this in `index.js` inside project directory.
 
-Save this inside `index.js` inside project directory. Run in with
+Also create the screenshots dir.
+
+```
+$ mkdir screenshots
+```
+
+Run the code with
 
 ```
 $ node index.js
 ```
 
-The screenshot is saved inside `screenshots/` dir.
+The screenshot is now saved inside `screenshots/` dir.
 
 ![GitHub](./screenshots/github.png)
 
@@ -198,7 +205,7 @@ let listLength = await page.evaluate((sel) => {
   }, LENGTH_SELECTOR_CLASS);
 ```
 
-Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index inside the selectors to point to the next dom element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
+Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index inside the selectors to point to the next DOM element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
 
 ```js
 // let LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
