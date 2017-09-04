@@ -87,7 +87,7 @@ If you go to GitHub and search for *john*, then click the users tab. You will se
 
 ![Johns](./media/all-johns.png)
 
-Some of them have made their emails publically visible and some have chosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
+Some of them have made their emails publicly visible and some have chosen not to. But the thing is you can't see these emails without logging in. So, lets login. We will make heavy use of [Puppeteer documentation](https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md).
 
 Add a file `creds.js` in project root. I highly recommend signing up for new account with a new dummy email because you **might** end up getting your account blocked.
 
@@ -197,7 +197,7 @@ let LENGTH_SELECTOR_CLASS = 'user-list-item';
 
 You can see that I also added `LENGTH_SELECTOR_CLASS` above. If you look at the github page's code inside developers tool, you will observe that `div`s with class `user-list-item` are actually housing information about a single user each.
 
-Currently one way to extract text from an element is by using `evaluate` method of `Page` or `ElementHandle`. When we navigate to page with search results, we will use `page.evaluate` method to get the lenght of users list on the page. The `evaluate` method evaluates the code inside browser context.
+Currently one way to extract text from an element is by using `evaluate` method of `Page` or `ElementHandle`. When we navigate to page with search results, we will use `page.evaluate` method to get the length of users list on the page. The `evaluate` method evaluates the code inside browser context.
 
 ```js
 let listLength = await page.evaluate((sel) => {
@@ -276,7 +276,7 @@ async function getNumPages(page) {
 ```
 
 At the bottom of the search results page, if you hover the mouse over buttons with page numbers, you can see they link to the next pages. The link to 2nd page with
-results is `https://github.com/search?p=2&q=john&type=Users&utf8=%E2%9C%93`. Notice the `p=2` query paramter in the URL. This will help us navigate to the next page.
+results is `https://github.com/search?p=2&q=john&type=Users&utf8=%E2%9C%93`. Notice the `p=2` query parameter in the URL. This will help us navigate to the next page.
 
 After adding an outer loop to go through all the pages around our previous loop, the code looks like
 
@@ -402,4 +402,4 @@ Chrome Headless and Puppeteer is the start of a new era in Web Scraping and Auto
 * Another thing I noticed, you cannot go beyond 100 pages on GitHub.
 
 ## End note
-Deserts symbolize vastness and are witness of the struggles and sacrifices of people who `traversed` through these giant mountains of sand. [**Thal**](https://en.wikipedia.org/wiki/Thal_Desert) is a desert in Pakistan spanning accross multiple districts including my home district Bhakkar. Somewhat similar is the case with `Internet` that we `traversed` today in quest of data. That's why I named the repository `Thal`. If you like this effort, please like and share this with others. If you have any suggestions, comment here or approach me directly [@e_mad_ehsan](https://twitter.com/e_mad_ehsan). I would love to hear from you.
+Deserts symbolize vastness and are witness of the struggles and sacrifices of people who `traversed` through these giant mountains of sand. [**Thal**](https://en.wikipedia.org/wiki/Thal_Desert) is a desert in Pakistan spanning across multiple districts including my home district Bhakkar. Somewhat similar is the case with `Internet` that we `traversed` today in quest of data. That's why I named the repository `Thal`. If you like this effort, please like and share this with others. If you have any suggestions, comment here or approach me directly [@e_mad_ehsan](https://twitter.com/e_mad_ehsan). I would love to hear from you.
