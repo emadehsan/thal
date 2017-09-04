@@ -288,34 +288,34 @@ console.log('Numpages: ', numPages);
 for (let h = 1; h <= numPages; h++) {
 
 	let pageUrl = searchUrl + '&p=' + h;
-
+	
 	await page.goto(pageUrl);
-
-  	let listLength = await page.evaluate((sel) => {
-    		return document.getElementsByClassName(sel).length;
-    	}, LENGTH_SELECTOR_CLASS);
-
+	
+	let listLength = await page.evaluate((sel) => {
+		return document.getElementsByClassName(sel).length;
+	}, LENGTH_SELECTOR_CLASS);
+	
 	for (let i = 1; i <= listLength; i++) {
-	  	// change the index to the next child
+		// change the index to the next child
 		let usernameSelector = LIST_USERNAME_SELECTOR.replace("INDEX", i);
 		let emailSelector = LIST_EMAIL_SELECTOR.replace("INDEX", i);
-
-    	let username = await page.evaluate((sel) => {
-        		return document.querySelector(sel).getAttribute('href').replace('/', '');
-      		}, usernameSelector);
-
-    	let email = await page.evaluate((sel) => {
-        		let element = document.querySelector(sel);
-        		return element? element.innerHTML: null;
-      		}, emailSelector);
-
+		
+		let username = await page.evaluate((sel) => {
+			return document.querySelector(sel).getAttribute('href').replace('/', '');
+		}, usernameSelector);
+		
+		let email = await page.evaluate((sel) => {
+			let element = document.querySelector(sel);
+			return element? element.innerHTML: null;
+		}, emailSelector);
+		
 		// not all users have emails visible
 		if (!email)
 			continue;
-
+			
 		console.log(username, ' -> ', email);
-
-    	// TODO save this users
+		
+		// TODO save this users
 	}
 }
 ```
@@ -359,16 +359,18 @@ Add the following function at bottom of `index.js` to **upsert** (update or inse
 function upsertUser(userObj) {
 
 	const DB_URL = 'mongodb://localhost/thal';
-
-  	if (mongoose.connection.readyState == 0) { mongoose.connect(DB_URL); }
-
-    // if this email exists, update the entry, don't insert
-	let conditions = { email: userObj.email };
-	let options = { upsert: true, new: true, setDefaultsOnInsert: true };
-
-  	User.findOneAndUpdate(conditions, userObj, options, (err, result) => {
-    	if (err) throw err;
-  	});
+	
+	if (mongoose.connection.readyState == 0) {
+		mongoose.connect(DB_URL);
+	}
+	
+	// if this email exists, update the entry, don't insert
+	const conditions = { email: userObj.email };
+	const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+	
+	User.findOneAndUpdate(conditions, userObj, options, (err, result) => {
+		if (err) throw err;
+	});
 }
 ```
 
