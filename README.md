@@ -64,14 +64,21 @@ run();
 ```
 
 If its your first time using `Node` 7 or 8, you might be unfamiliar with `async` and `await` keywords. To put  `async/await` in really simple words, an async function returns a Promise. The promise when resolves might return the result that you asked for. But to do this in a single line, you tie the call to async function with `await`.
+Save this in `index.js` inside project directory.
 
-Save this inside `index.js` inside project directory. Run in with
+Also create the screenshots dir.
+
+```
+$ mkdir screenshots
+```
+
+Run the code with
 
 ```
 $ node index.js
 ```
 
-The screenshot is saved inside `screenshots/` dir.
+The screenshot is now saved inside `screenshots/` dir.
 
 ![GitHub](./screenshots/github.png)
 
