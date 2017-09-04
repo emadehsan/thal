@@ -51,7 +51,7 @@ async function run() {
 
     let listLength = await page.evaluate((sel) => {
       return document.getElementsByClassName(sel).length;
-      }, LENGTH_SELECTOR_CLASS);
+    }, LENGTH_SELECTOR_CLASS);
 
     for (let i = 1; i <= listLength; i++) {
       // change the index to the next child
@@ -60,12 +60,12 @@ async function run() {
 
       let username = await page.evaluate((sel) => {
         return document.querySelector(sel).getAttribute('href').replace('/', '');
-    }, usernameSelector);
+      }, usernameSelector);
 
       let email = await page.evaluate((sel) => {
         let element = document.querySelector(sel);
-      return element? element.innerHTML: null;
-    }, emailSelector);
+        return element ? element.innerHTML : null;
+      }, emailSelector);
 
       // not all users have emails visible
       if (!email)
@@ -90,9 +90,9 @@ async function getNumPages(page) {
   let inner = await page.evaluate((sel) => {
     let html = document.querySelector(sel).innerHTML;
 
-      // format is: "69,803 users"
-      return html.replace(',', '').replace('users', '').trim();
-    }, NUM_USER_SELECTOR);
+    // format is: "69,803 users"
+    return html.replace(',', '').replace('users', '').trim();
+  }, NUM_USER_SELECTOR);
 
   const numUsers = parseInt(inner);
 
@@ -116,9 +116,9 @@ function upsertUser(userObj) {
   const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
   User.findOneAndUpdate(conditions, userObj, options, (err, result) => {
-      if (err) {
-        throw err;
-      }
+    if (err) {
+      throw err;
+    }
   });
 }
 
