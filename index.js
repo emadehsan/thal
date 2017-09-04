@@ -90,9 +90,9 @@ async function getNumPages(page) {
   let inner = await page.evaluate((sel) => {
     let html = document.querySelector(sel).innerHTML;
 
-  // format is: "69,803 users"
-  return html.replace(',', '').replace('users', '').trim();
-}, NUM_USER_SELECTOR);
+      // format is: "69,803 users"
+      return html.replace(',', '').replace('users', '').trim();
+    }, NUM_USER_SELECTOR);
 
   const numUsers = parseInt(inner);
 
