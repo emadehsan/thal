@@ -154,10 +154,10 @@ And then
 
 ```js
 await page.click(USERNAME_SELECTOR);
-await page.type(CREDS.username);
+await page.keyboard.type(CREDS.username);
 
 await page.click(PASSWORD_SELECTOR);
-await page.type(CREDS.password);
+await page.keyboard.type(CREDS.password);
 
 await page.click(BUTTON_SELECTOR);
 
