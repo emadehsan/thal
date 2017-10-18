@@ -21,10 +21,10 @@ async function run() {
   const BUTTON_SELECTOR = '#login > form > div.auth-form-body.mt-3 > input.btn.btn-primary.btn-block';
 
   await page.click(USERNAME_SELECTOR);
-  await page.type(CREDS.username);
+  await page.keyboard.type(CREDS.username);
 
   await page.click(PASSWORD_SELECTOR);
-  await page.type(CREDS.password);
+  await page.keyboard.type(CREDS.password);
 
   await page.click(BUTTON_SELECTOR);
   await page.waitForNavigation();
