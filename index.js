@@ -29,7 +29,7 @@ async function run() {
   await page.click(BUTTON_SELECTOR);
   await page.waitForNavigation();
 
-  const userToSearch = 'john';
+  const userToSearch = 'Gwendolyn';
   const searchUrl = `https://github.com/search?q=${userToSearch}&type=Users&utf8=%E2%9C%93`;
   // let searchUrl = 'https://github.com/search?utf8=%E2%9C%93&q=bashua&type=Users';
 
