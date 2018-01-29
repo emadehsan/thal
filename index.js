@@ -85,7 +85,7 @@ async function run() {
 }
 
 async function getNumPages(page) {
-  const NUM_USER_SELECTOR = '#js-pjax-container > div.container > div > div.column.three-fourths.codesearch-results.pr-6 > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
+  const NUM_USER_SELECTOR = '#js-pjax-container > div > div.columns > div.column.three-fourths.codesearch-results > div > div.d-flex.flex-justify-between.border-bottom.pb-3 > h3';
 
   let inner = await page.evaluate((sel) => {
     let html = document.querySelector(sel).innerHTML;
