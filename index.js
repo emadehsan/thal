@@ -11,7 +11,7 @@ async function run() {
   const page = await browser.newPage();
 
   // await page.goto('https://github.com');
-  // await page.screenshot path: 'screenshots/github.png' });
+  // await page.screenshot({ path: 'screenshots/github.png' });
 
   await page.goto('https://github.com/login');
 
