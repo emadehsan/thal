@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/emadehsan/thal#readme",
   "dependencies": {
-    "mongoose": "^4.11.8",
+    "mongoose": "^5.7.6",
     "puppeteer": "git+https://github.com/GoogleChrome/puppeteer.git"
   }
 }
