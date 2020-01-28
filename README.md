@@ -159,9 +159,11 @@ await page.keyboard.type(CREDS.username);
 await page.click(PASSWORD_SELECTOR);
 await page.keyboard.type(CREDS.password);
 
-await page.click(BUTTON_SELECTOR);
+await Promise.all([
+  page.click(BUTTON_SELECTOR),
+  page.waitForNavigation()
+])
 
-await page.waitForNavigation();
 ```
 
 ### Search GitHub
@@ -189,8 +191,8 @@ await page.waitFor(2*1000);
 We are interested in extracting `username` and `email` of users. Lets copy the DOM element selectors like we did above.
 
 ```js
-const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
-const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
+const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > a';
+const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > ul > li:nth-child(2) > a';
 
 const LENGTH_SELECTOR_CLASS = 'user-list-item';
 ```
@@ -208,10 +210,11 @@ let listLength = await page.evaluate((sel) => {
 Let's loop through all the listed users and extract emails. As we loop through the DOM, we have to change index inside the selectors to point to the next DOM element. So, I put the `INDEX` string at the place where we want to place the index as we loop through.
 
 ```js
-// const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
-const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > a';
-// const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(2) > div.d-flex > div > ul > li:nth-child(2) > a';
-const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
+  // const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > a';
+const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) div.d-flex > div > a';
+  // const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > ul > li:nth-child(2) > a';
+const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) div.d-flex > div > ul > li:nth-child(2) > a';
+const LENGTH_SELECTOR_CLASS = 'user-list-item';
 ```
 
 The loop and extraction
