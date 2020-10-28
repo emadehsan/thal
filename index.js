@@ -26,8 +26,10 @@ async function run() {
   await page.click(PASSWORD_SELECTOR);
   await page.keyboard.type(CREDS.password);
 
-  await page.click(BUTTON_SELECTOR);
-  await page.waitForNavigation();
+  await Promise.all([
+    page.click(BUTTON_SELECTOR),
+    page.waitForNavigation()
+  ]);
 
   const userToSearch = 'john';
   const searchUrl = `https://github.com/search?q=${userToSearch}&type=Users&utf8=%E2%9C%93`;
@@ -36,10 +38,10 @@ async function run() {
   await page.goto(searchUrl);
   await page.waitFor(2 * 1000);
 
-    // const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > a';
-  const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > a';
-    // const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.d-flex > div > ul > li:nth-child(2) > a';
-  const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.d-flex > div > ul > li:nth-child(2) > a';
+    // const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > a';
+  const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) div.d-flex > div > a';
+    // const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > ul > li:nth-child(2) > a';
+  const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) div.d-flex > div > ul > li:nth-child(2) > a';
   const LENGTH_SELECTOR_CLASS = 'user-list-item';
   const numPages = await getNumPages(page);
 
