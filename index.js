@@ -38,10 +38,10 @@ async function run() {
   await page.goto(searchUrl);
   await page.waitFor(2 * 1000);
 
-    // const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > a';
+  // const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > a';
   const LIST_USERNAME_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) div.d-flex > div > a';
-    // const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) div.d-flex > div > ul > li:nth-child(2) > a';
-  const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) div.d-flex > div > ul > li:nth-child(2) > a';
+  // const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(1) > div.flex-auto > div.d-flex.flex-wrap.text-small.text-gray > div:nth-child(2) > a'
+  const LIST_EMAIL_SELECTOR = '#user_search_results > div.user-list > div:nth-child(INDEX) > div.flex-auto > div.d-flex.flex-wrap.text-small.text-gray > div:nth-child(2) > a'
   const LENGTH_SELECTOR_CLASS = 'user-list-item';
   const numPages = await getNumPages(page);
 
@@ -75,11 +75,11 @@ async function run() {
 
       console.log(username, ' -> ', email);
 
-      upsertUser({
-        username: username,
-        email: email,
-        dateCrawled: new Date()
-      });
+      // upsertUser({
+      //   username: username,
+      //   email: email,
+      //   dateCrawled: new Date()
+      // });
     }
   }
 
